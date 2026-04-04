@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ledger</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+
+<div id="page-login" class="page active">
+  <div class="login-bg">
+    <div class="login-grid"></div>
+  </div>
+  <div class="login-wrap">
+    <div class="login-brand">
+      <span class="brand-mark">◈</span>
+      <span class="brand-name">Ledger</span>
+    </div>
+    <div class="login-card">
+      <h1 class="login-title">Welcome<br /><em>back.</em></h1>
+      <p class="login-sub">Sign in to your financial dashboard</p>
+      <div id="login-error" class="alert alert-error hidden"></div>
+      <form id="login-form" novalidate>
+        <div class="field">
+          <label for="login-email">Email</label>
+          <input id="login-email" type="email" placeholder="you@example.com" autocomplete="email" />
+        </div>
+        <div class="field">
+          <label for="login-password">Password</label>
+          <input id="login-password" type="password" placeholder="••••••••" autocomplete="current-password" />
+        </div>
+        <button type="submit" class="btn btn-primary btn-full" id="login-btn">
+          <span class="btn-text">Sign in</span>
+          <span class="btn-loader hidden">⟳</span>
+        </button>
+      </form>
+      <p class="login-hint">Demo: admin@example.com / password123</p>
+    </div>
+  </div>
+</div>
+
+
+<div id="page-app" class="page">
+
+  
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <span class="brand-mark">◈</span>
+      <span class="brand-name">Ledger</span>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-view="dashboard">
+        <span class="nav-icon">▦</span> Dashboard
+      </button>
+      <button class="nav-item" data-view="records">
+        <span class="nav-icon">≡</span> Records
+      </button>
+      <button class="nav-item" data-view="users" id="nav-users">
+        <span class="nav-icon">◎</span> Users
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-pill" id="user-pill">
+        <div class="user-avatar" id="user-avatar">A</div>
+        <div class="user-info">
+          <div class="user-name" id="user-name">Loading…</div>
+          <div class="user-role" id="user-role">—</div>
+        </div>
+      </div>
+      <button class="btn-icon" id="logout-btn" title="Sign out">⏻</button>
+    </div>
+  </aside>
+
+
+  <main class="main">
+
+    
+    <section id="view-dashboard" class="view active">
+      <header class="view-header">
+        <div>
+          <h2 class="view-title">Overview</h2>
+          <p class="view-subtitle" id="dash-date"></p>
+        </div>
+      </header>
+
+      
+      <div class="kpi-row">
+        <div class="kpi-card" id="kpi-income">
+          <div class="kpi-label">Total Income</div>
+          <div class="kpi-value" id="kpi-income-val">—</div>
+          <div class="kpi-badge income">↑ income</div>
+        </div>
+        <div class="kpi-card" id="kpi-expense">
+          <div class="kpi-label">Total Expenses</div>
+          <div class="kpi-value" id="kpi-expense-val">—</div>
+          <div class="kpi-badge expense">↓ expense</div>
+        </div>
+        <div class="kpi-card kpi-net" id="kpi-net">
+          <div class="kpi-label">Net Balance</div>
+          <div class="kpi-value" id="kpi-net-val">—</div>
+          <div class="kpi-badge" id="kpi-net-badge">net</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Total Records</div>
+          <div class="kpi-value" id="kpi-records-val">—</div>
+          <div class="kpi-badge">entries</div>
+        </div>
+      </div>
+
+      
+      <div class="charts-row">
+        <div class="card chart-card">
+          <div class="card-header">
+            <span class="card-title">Monthly Trend</span>
+            <span class="card-hint">12 months</span>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="chart-monthly"></canvas>
+          </div>
+        </div>
+        <div class="card chart-card chart-card--sm">
+          <div class="card-header">
+            <span class="card-title">By Category</span>
+          </div>
+          <div id="category-list" class="category-list"></div>
+        </div>
+      </div>
+
+      
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Recent Activity</span>
+          <button class="btn btn-ghost btn-sm" id="dash-view-all">View all →</button>
+        </div>
+        <table class="data-table" id="recent-table">
+          <thead>
+            <tr>
+              <th>Date</th><th>Category</th><th>Type</th><th>Amount</th><th>Notes</th>
+            </tr>
+          </thead>
+          <tbody id="recent-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    
+    <section id="view-records" class="view">
+      <header class="view-header">
+        <div>
+          <h2 class="view-title">Records</h2>
+          <p class="view-subtitle">All financial entries</p>
+        </div>
+        <div class="view-actions">
+          <button class="btn btn-primary" id="btn-new-record" style="display:none">+ New Record</button>
+        </div>
+      </header>
+
+      
+      <div class="filters-bar">
+        <select id="filter-type" class="filter-input">
+          <option value="">All types</option>
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
+        </select>
+        <input id="filter-category" type="text" class="filter-input" placeholder="Category…" />
+        <input id="filter-from" type="date" class="filter-input" />
+        <input id="filter-to" type="date" class="filter-input" />
+        <button class="btn btn-ghost btn-sm" id="btn-filter">Apply</button>
+        <button class="btn btn-ghost btn-sm" id="btn-clear-filter">Clear</button>
+      </div>
+
+      <div class="card">
+        <table class="data-table" id="records-table">
+          <thead>
+            <tr>
+              <th>Date</th><th>Category</th><th>Type</th><th>Amount</th><th>Notes</th><th>By</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="records-tbody">
+            <tr><td colspan="7" class="table-loading">Loading…</td></tr>
+          </tbody>
+        </table>
+        <div class="pagination" id="records-pagination"></div>
+      </div>
+    </section>
+
+    
+    <section id="view-users" class="view">
+      <header class="view-header">
+        <div>
+          <h2 class="view-title">Users</h2>
+          <p class="view-subtitle">Team members & access</p>
+        </div>
+        <div class="view-actions">
+          <button class="btn btn-primary" id="btn-new-user">+ New User</button>
+        </div>
+      </header>
+      <div class="card">
+        <table class="data-table">
+          <thead>
+            <tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Joined</th><th></th></tr>
+          </thead>
+          <tbody id="users-tbody">
+            <tr><td colspan="6" class="table-loading">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+
+<div id="modal-record" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title" id="modal-record-title">New Record</h3>
+      <button class="modal-close" data-modal="modal-record">✕</button>
+    </div>
+    <div id="modal-record-error" class="alert alert-error hidden"></div>
+    <form id="record-form" novalidate>
+      <input type="hidden" id="record-id" />
+      <div class="form-grid">
+        <div class="field">
+          <label>Amount</label>
+          <input id="rec-amount" type="number" min="0.01" step="0.01" placeholder="0.00" />
+        </div>
+        <div class="field">
+          <label>Type</label>
+          <select id="rec-type">
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Category</label>
+          <input id="rec-category" type="text" placeholder="Salary, Rent…" />
+        </div>
+        <div class="field">
+          <label>Date</label>
+          <input id="rec-date" type="date" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Notes</label>
+        <textarea id="rec-notes" rows="2" placeholder="Optional description…"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" data-modal="modal-record">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="record-submit-btn">Save Record</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<
+<div id="modal-user" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title" id="modal-user-title">New User</h3>
+      <button class="modal-close" data-modal="modal-user">✕</button>
+    </div>
+    <div id="modal-user-error" class="alert alert-error hidden"></div>
+    <form id="user-form" novalidate>
+      <input type="hidden" id="user-edit-id" />
+      <div class="form-grid">
+        <div class="field" id="user-name-field">
+          <label>Name</label>
+          <input id="user-name-input" type="text" placeholder="Full name" />
+        </div>
+        <div class="field" id="user-email-field">
+          <label>Email</label>
+          <input id="user-email-input" type="email" placeholder="email@example.com" />
+        </div>
+        <div class="field" id="user-password-field">
+          <label>Password</label>
+          <input id="user-password-input" type="password" placeholder="Min 8 characters" />
+        </div>
+        <div class="field">
+          <label>Role</label>
+          <select id="user-role-input">
+            <option value="viewer">Viewer</option>
+            <option value="analyst">Analyst</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <div class="field" id="user-status-field" style="display:none">
+          <label>Status</label>
+          <select id="user-status-input">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" data-modal="modal-user">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="user-submit-btn">Create User</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<div id="modal-confirm" class="modal-overlay hidden">
+  <div class="modal modal--sm">
+    <div class="modal-header">
+      <h3 class="modal-title">Confirm Delete</h3>
+    </div>
+    <p class="modal-body-text" id="confirm-message">Are you sure?</p>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" data-modal="modal-confirm">Cancel</button>
+      <button class="btn btn-danger" id="confirm-ok-btn">Delete</button>
+    </div>
+  </div>
+</div>
+
+
+<div id="toast" class="toast hidden"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
