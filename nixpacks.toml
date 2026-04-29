@@ -1,4 +1,4 @@
-[phases.build]
+[phases.install]
 cmds = ["cd finance-backend && npm install"]
 
 [start]
