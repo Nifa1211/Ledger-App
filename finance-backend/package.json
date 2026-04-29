@@ -4,8 +4,8 @@
   "description": "Finance Dashboard Backend API with role-based access control",
   "main": "src/app.js",
   "scripts": {
-    "start": "node --experimental-sqlite src/app.js",
-    "dev": "node --experimental-sqlite --watch src/app.js",
+    "start": "node  src/app.js",
+    "dev": "node  --watch src/app.js",
     "test": "NODE_OPTIONS=--experimental-sqlite node --experimental-sqlite node_modules/.bin/jest --runInBand --forceExit",
     "seed": "node --experimental-sqlite src/utils/seed.js"
   },
