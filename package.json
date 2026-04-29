@@ -1,0 +1,8 @@
+{
+  "name": "ledger-app",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "cd finance-backend && npm install",
+    "start": "cd finance-backend && node src/app.js"
+  }
+}
