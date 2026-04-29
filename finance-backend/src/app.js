@@ -41,7 +41,7 @@ app.get(/^(?!\/api).*/, (req, res) => {
   res.sendFile(path.join(FRONTEND_PATH, "index.html"));
 });
 
-/
+
 app.use("/api", (req, res) => res.status(404).json({ error: "Route not found" }));
 
 
