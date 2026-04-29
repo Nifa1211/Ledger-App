@@ -27,7 +27,7 @@ app.use(
 );
 
 
-const FRONTEND_PATH = path.join(__dirname, "../../finance-frontend/build");
+const FRONTEND_PATH = path.join(__dirname, "../../finance-frontend");
 app.use(express.static(FRONTEND_PATH));
 
 
